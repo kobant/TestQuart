@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   <mapper namespace="com.example.demo.mapper.JobsMapper">
+    <select id="get" parameterType="java.lang.Long" resultType="map">
+		select
+	      id, name, content, cron_expression, class_method, state,
+        job_group, create_time, update_time
+		from sys_task
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+    <select id="list" resultType="map">
+		select
+	      id, name, content, cron_expression, class_method, state,
+        job_group, create_time, update_time
+		from sys_task
+		order by id asc
+	</select>
+
+    <insert id="save" parameterType="map">
+        insert into sys_task (id, name, content, cron_expression, class_method, state,
+        job_group, create_time, update_time)
+        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
+        #{content,jdbcType=VARCHAR},
+        #{cron_expression,jdbcType=VARCHAR}, #{class_method,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR},
+        #{job_group,jdbcType=VARCHAR},
+        #{create_time,jdbcType=TIMESTAMP},
+        #{update_time,jdbcType=TIMESTAMP})
+    </insert>
+
+
+    <update id="update" parameterType="map">
+        update sys_task
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="cronExpression != null">
+                cron_expression = #{cron_expression,jdbcType=VARCHAR},
+            </if>
+            <if test="class_method != null">
+                class_method = #{class_method,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=VARCHAR},
+            </if>
+            <if test="job_group != null">
+                job_group = #{job_group,jdbcType=VARCHAR},
+            </if>
+
+            <if test="createTime != null">
+                create_time = #{create_time,jdbcType=TIMESTAMP},
+            </if>
+
+            <if test="updateTime != null">
+                update_time = #{update_time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="remove">
+        delete from sys_task where id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <delete id="removeBatch">
+        delete from sys_task where id in
+        <foreach item="id" collection="array" open="(" separator=","
+                 close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
